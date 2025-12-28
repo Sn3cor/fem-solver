@@ -3,12 +3,12 @@ import type { ReactNode } from "react"
 interface PageProps {
     children?: ReactNode
 }
-const PageWrapper = ({ children }: PageProps) => {
+const Wrapper = ({ children }: PageProps) => {
     return (
         <div className="wrapper">
             <div className="header">
-                <h1>Finite Element Method Solver</h1>
-                <h3>for material's layers acoustic vibraions</h3>
+                <h1>Visualization for Finite Elements Method</h1>
+                <h2>Problem: material layers acoustic vibrations</h2>
             </div>
             {children}
             <div className="footer">
@@ -18,4 +18,4 @@ const PageWrapper = ({ children }: PageProps) => {
     )
 }
 
-export default PageWrapper 
+export default Wrapper 

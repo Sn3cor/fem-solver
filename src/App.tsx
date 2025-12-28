@@ -1,13 +1,13 @@
 import './App.css'
-import PageWrapper from './components/PageWrapper'
+import Wrapper from './components/Wrapper'
 import Visualizer from './components/Visualizer'
 function App() {
 
   return (
     <>
-      <PageWrapper>
+      <Wrapper>
         <Visualizer />
-      </PageWrapper>
+      </Wrapper>
     </>
   )
 }

@@ -1,6 +1,6 @@
 import { quadrature } from "./gauss";
 import type { Interval, Elementary } from "./types"
-import { usolve } from "mathjs";
+import { lusolve } from "mathjs";
 
 export class Solver {
     private n: number;
@@ -10,26 +10,19 @@ export class Solver {
     private B: number[][]
     private L: number[]
     private elementaryFunctions: Elementary[]
-    private elementaryFunctionsDerivative: Elementary[]
 
     constructor(elementsNumber: number, domain: Interval = [0, 2]) {
         this.n = elementsNumber + 1 // n is number of nodes
         this.domain = domain
         this.h = (this.domain[1] - this.domain[0]) / (this.n - 1)
         this.B = [...Array(this.n)].map(_ => Array(this.n).fill(0))
-        this.L = new Array(this.n)
+        this.L = new Array(this.n).fill(0)
         this.elements = this.initElements()
-        this.elementaryFunctions = this.initElemFunctions();
-        this.elementaryFunctionsDerivative = this.initDerivatives()
+        this.elementaryFunctions = Array.from({ length: this.n }, () => [(_: number) => 0, (_: number) => 0]);
 
         this.evalBMatrix()
         this.evalLMatrix()
     }
-
-    private e = (index: number): Elementary => {
-        return [(x: number) => x / this.h - index + 1, (x: number) => index + 1 - x / this.h]
-    }
-
     private initElements = (): Interval[] => {
         const elements = new Array<Interval>(this.n - 1)
         for (let i = 0; i < this.n - 1; i++) {
@@ -40,89 +33,68 @@ export class Solver {
         return elements
     }
 
-    private initElemFunctions = (): Elementary[] => {
-        const E = new Array<Elementary>(this.n)
-        const first: Elementary = [(x: number) => 0, (x: number) => 1 - x / this.h]
-        const last: Elementary = [(x: number) => (this.n - 1 - x) / this.h, (x: number) => 0]
-        E[0] = first
-        E[this.n - 1] = last
-
-        for (let i = 1; i < this.n - 1; i++) {
-            E[i] = this.e(i)
-        }
-
-        return E
-    }
-
-    private initDerivatives = (): Elementary[] => {
-        const D = new Array<Elementary>(this.n)
-        const first: Elementary = [(x: number) => 0, (x: number) => -1 / this.h]
-        const last: Elementary = [(x: number) => -1 / this.h, (x: number) => 1 / this.h]
-        D[0] = first
-        D[this.n - 1] = last
-
-        for (let i = 1; i < this.n - 1; i++) {
-            D[i] = [(x: number) => 1 / this.h, (x: number) => -1 / this.h]
-        }
-        return D
-    }
-
-    private evalBMatrix = () => {
+    private evalBMatrix = (): void => {
         this.B[0][0] = 1
 
-        for (let el = 0; el < this.elements.length; el++) {
-            const [a, b] = this.elements[el]
-
+        this.elements.forEach(([a, b], idx) => {
+            const e = [
+                (x: number) => (b - x) / this.h,
+                (x: number) => (x - a) / this.h
+            ]
+            const de = [
+                (_: number) => -1 / this.h,
+                (_: number) => 1 / this.h
+            ]
+            this.elementaryFunctions[idx][1] = e[0]
+            this.elementaryFunctions[idx + 1][0] = e[1]
 
             for (let i = 0; i < 2; i++) {
-                const I = el + i
-                if (I === 0) continue  // <--- pomijamy Dirichlet
-                const ei = this.elementaryFunctions[I][i]
-                const dei = this.elementaryFunctionsDerivative[I][i]
-
+                const I = idx + i
+                if (I == 0) continue //Dirichlet
                 for (let j = 0; j < 2; j++) {
-                    const J = el + j
-                    if (J === 0) continue  // <--- pomijamy Dirichlet
-                    const ej = this.elementaryFunctions[J][j]
-                    const dej = this.elementaryFunctionsDerivative[J][j]
-
-                    const toIntegrate = (x: number) => dei(x) * dej(x) - ei(x) * ej(x)
-                    const value = quadrature([a, b], toIntegrate)
-                    this.B[I][J] += value
-                    this.B[J][I] += value
+                    const J = idx + j
+                    if (J == 0) continue //Dirichlet
+                    const toIntegrate = (x: number) => de[i](x) * de[j](x) - e[i](x) * e[j](x)
+                    this.B[I][J] += quadrature([a, b], toIntegrate)
                 }
-
             }
-        }
+        })
 
         this.B[this.n - 1][this.n - 1] -= 1
+
     }
 
-    private evalLMatrix = () => {
+    private evalLMatrix = (): void => {
         this.L[0] = 0
 
-        for (let el = 0; el < this.elements.length; el++) {
-            const [a, b] = this.elements[el]
+        this.elements.forEach(([a, b], idx) => {
+            const e = [
+                (x: number) => (b - x) / this.h,
+                (x: number) => (x - a) / this.h
+            ]
+
             for (let i = 0; i < 2; i++) {
-                const I = el + i
-                if (I === 0) continue  // <--- pomijamy Dirichlet
-                const ej = this.elementaryFunctions[I][i]
-
-                const toIntegrate = (x: number) => (Math.sin(x) + x + 1) * ej(x)
+                const I = idx + i
+                if (I === 0) continue
+                const toIntegrate = (x: number) => (Math.sin(x) + x + 1) * e[i](x)
                 this.L[I] += quadrature([a, b], toIntegrate)
-
-
             }
-        }
-        this.L[this.n - 1] -= 7
+
+
+        })
+        this.L[this.n - 1] += 7
     }
 
     public solve = () => {
+        console.log(this.B)
+        console.log(this.L)
+        const matrix = lusolve(this.B, this.L) as number[][]
+        const solution = matrix.map(row => row[0])
         return {
-            solutionVector: usolve(this.B, this.L),
-            domain: this.domain,
-            elements: this.n - 1,
-            h: this.h
+            solutionVector: solution,
+            h: this.h,
+            elements: this.elements,
+            eFunctions: this.elementaryFunctions
         }
 
     }
