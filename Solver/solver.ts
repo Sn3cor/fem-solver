@@ -127,3 +127,4 @@ export class Solver {
 
     }
 }
+export default Solver
