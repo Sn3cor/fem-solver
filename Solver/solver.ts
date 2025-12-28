@@ -1,5 +1,6 @@
 import { quadrature } from "./gauss";
 import type { Interval, Elementary } from "./types"
+import { usolve } from "mathjs";
 
 export class Solver {
     private n: number;
@@ -20,6 +21,9 @@ export class Solver {
         this.elements = this.initElements()
         this.elementaryFunctions = this.initElemFunctions();
         this.elementaryFunctionsDerivative = this.initDerivatives()
+
+        this.evalBMatrix()
+        this.evalLMatrix()
     }
 
     private e = (index: number): Elementary => {
@@ -113,7 +117,13 @@ export class Solver {
         this.L[this.n - 1] -= 7
     }
 
-    private solve = () => {
+    public solve = () => {
+        return {
+            solutionVector: usolve(this.B, this.L),
+            domain: this.domain,
+            elements: this.n - 1,
+            h: this.h
+        }
 
     }
 }
