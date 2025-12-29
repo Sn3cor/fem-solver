@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Mafs, Coordinates, Line, Plot } from "mafs"
+import { Mafs, Coordinates, Line, Plot, Theme } from "mafs"
 import Solver from "../../Solver/solver"
 import "./Visualize.css"
 import type { Elementary, Interval } from "../../Solver/types"
@@ -28,18 +28,7 @@ const Visualizer = () => {
     const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
         updatePlot()
     }
-    const getAnalyticSolution = (x: number): number => {
-        const cos2 = Math.cos(2);
-        const sin2 = Math.sin(2);
 
-        // Rozbicie wzoru na części dla czytelności
-        const term1 = -2 * (1 + x);
-        const term2 = (4 + x) * Math.cos(x);
-        const numerator3 = (6 + 5 * cos2 + 6 * sin2) * Math.sin(x);
-        const denominator3 = cos2 - sin2;
-
-        return (term1 + term2 + (numerator3 / denominator3)) / 2;
-    };
     return (
         <div className="visualizer">
             <input type="number" onChange={handleInput} />
@@ -66,7 +55,7 @@ const Visualizer = () => {
                                 key={i}
                                 point1={[x0, y0]}
                                 point2={[x1, y1]}
-                                color="Blue"
+                                color={Theme.violet}
                             />
                         )
                     })}

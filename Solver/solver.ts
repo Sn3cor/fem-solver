@@ -50,10 +50,10 @@ export class Solver {
 
             for (let i = 0; i < 2; i++) {
                 const I = idx + i
-                if (I == 0) continue //Dirichlet
+                if (I == 0) continue // Dirichlet
                 for (let j = 0; j < 2; j++) {
                     const J = idx + j
-                    if (J == 0) continue //Dirichlet
+                    if (J == 0) continue // Dirichlet
                     const toIntegrate = (x: number) => de[i](x) * de[j](x) - e[i](x) * e[j](x)
                     this.B[I][J] += quadrature([a, b], toIntegrate)
                 }
@@ -65,7 +65,7 @@ export class Solver {
     }
 
     private evalLMatrix = (): void => {
-        this.L[0] = 0
+        this.L[0] = 0 // Dirichlet 
 
         this.elements.forEach(([a, b], idx) => {
             const e = [
@@ -82,7 +82,7 @@ export class Solver {
 
 
         })
-        this.L[this.n - 1] += 7
+        this.L[this.n - 1] += 7 // Robin
     }
 
     public solve = () => {
