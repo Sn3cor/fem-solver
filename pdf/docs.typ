@@ -40,5 +40,3 @@ $ integral_0^2 k(x) w' v' space dif x - w(0)v(0) = -19v(0) - integral_0^2 k(x) v
 $ B(w, v) = integral_0^2 k(x) w' v' space d x - w(0) v(0) $
 
 $ L(v) = -19 v(0) - integral_0^2 k(x) v' space d x $
-
-Gdzie stała $-19$ wynika z połączenia wymuszenia $-18 v(0)$ oraz poprawki brzegowej z całki przez części dla shiftu $+k(0) phi'(0) v(0) = 1 v(0)$, co po przeniesieniu na prawą stronę daje $-18 - 1 = -19$ (przy uwzględnieniu konwencji znaków w implementacji).
