@@ -30,12 +30,12 @@ const Visualizer = () => {
 
     return (
         <div className="visualizer">
-            <input type="number" onChange={handleInput} />
+            <input type="number" min={0} onChange={handleInput} />
             <input
                 type="button"
                 value="Submit"
                 onClick={handleClick}
-                disabled={input === "0"}
+                disabled={input <= "0"}
             />
             <div className="graph">
                 <Mafs
