@@ -9,6 +9,7 @@ export class Solver {
     private elements: Interval[]
     private B: number[][]
     private L: number[]
+    private k: (x: number) => number
     private elementaryFunctions: Elementary[]
 
     constructor(elementsNumber: number, domain: Interval = [0, 2]) {
@@ -18,6 +19,7 @@ export class Solver {
         this.B = [...Array(this.n)].map(_ => Array(this.n).fill(0))
         this.L = new Array(this.n).fill(0)
         this.elements = this.initElements()
+        this.k = (x: number) => x > 1 ? 2 : 1
         this.elementaryFunctions = Array.from({ length: this.n }, () => [(_: number) => 0, (_: number) => 0]);
 
         this.evalBMatrix()
@@ -34,7 +36,7 @@ export class Solver {
     }
 
     private evalBMatrix = (): void => {
-        this.B[0][0] = 1
+        this.B[this.n - 1][this.n - 1] = 1
 
         this.elements.forEach(([a, b], idx) => {
             const e = [
@@ -48,41 +50,42 @@ export class Solver {
             this.elementaryFunctions[idx][1] = e[0]
             this.elementaryFunctions[idx + 1][0] = e[1]
 
+
+
             for (let i = 0; i < 2; i++) {
                 const I = idx + i
-                if (I == 0) continue // Dirichlet
+                if (I == this.n - 1) continue // Dirichlet
                 for (let j = 0; j < 2; j++) {
                     const J = idx + j
-                    if (J == 0) continue // Dirichlet
-                    const toIntegrate = (x: number) => de[i](x) * de[j](x) - e[i](x) * e[j](x)
+                    if (J == this.n - 1) continue // Dirichlet
+                    const toIntegrate = (x: number) => this.k(x) * de[i](x) * de[j](x)
                     this.B[I][J] += quadrature([a, b], toIntegrate)
                 }
             }
         })
 
-        this.B[this.n - 1][this.n - 1] -= 1
+        this.B[0][0] -= 1
 
     }
 
     private evalLMatrix = (): void => {
-        this.L[0] = 0 // Dirichlet 
-
+        this.L.fill(0)
+        this.L[this.n - 1] = 0 // Dirichlet 
         this.elements.forEach(([a, b], idx) => {
-            const e = [
-                (x: number) => (b - x) / this.h,
-                (x: number) => (x - a) / this.h
+            const de = [
+                (_: number) => -1 / this.h,
+                (_: number) => 1 / this.h
             ]
 
             for (let i = 0; i < 2; i++) {
                 const I = idx + i
-                if (I === 0) continue
-                const toIntegrate = (x: number) => (Math.sin(x) + x + 1) * e[i](x)
-                this.L[I] += quadrature([a, b], toIntegrate)
+                if (I == this.n - 1) continue // Dirichlet
+                const toIntegrate = (x: number) => this.k(x) * de[i](x)
+                this.L[I] -= quadrature([a, b], toIntegrate)
             }
 
-
         })
-        this.L[this.n - 1] += 7 // Robin
+        this.L[0] -= 19 // Robin
     }
 
     public solve = () => {

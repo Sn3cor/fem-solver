@@ -2,13 +2,12 @@ import { useState } from "react"
 import { Mafs, Coordinates, Line, Plot, Theme } from "mafs"
 import Solver from "../../Solver/solver"
 import "./Visualize.css"
-import type { Elementary, Interval } from "../../Solver/types"
+import type { Interval } from "../../Solver/types"
 
 const Visualizer = () => {
     const [input, setInput] = useState<string>("0")
     const [coefficients, setCoefficients] = useState<number[]>([])
     const [h, setH] = useState(0)
-    // const [eFunctions, setEFunctions] = useState<Elementary[]>([])
     const [elements, setElements] = useState<Interval[]>([])
 
     const updatePlot = () => {
@@ -40,7 +39,13 @@ const Visualizer = () => {
             />
             <div className="graph">
                 <Mafs
+                    height={800}
+                    preserveAspectRatio={false}
                     zoom={true}
+                    viewBox={{
+                        x: [0, 2],
+                        y: [3, 22]
+                    }}
                 >
                     <Coordinates.Cartesian />
                     {elements.map((element, i) => {
