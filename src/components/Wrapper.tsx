@@ -11,7 +11,7 @@ const Wrapper = ({ children }: PageProps) => {
                 <h1>Visualization for Finite Elements Method</h1>
                 <div className="flex">
                     <h2>Problem: heat transport equation </h2>
-                    <a href="./" target="blank" ><AiFillFilePdf size={30} /></a>
+                    <a href="https://github.com/Sn3cor/fem-solver/blob/main/pdf/docs.pdf" target="blank" ><AiFillFilePdf size={30} /></a>
                 </div>
 
             </div>
