@@ -39,12 +39,12 @@ const Visualizer = () => {
             />
             <div className="graph">
                 <Mafs
-                    height={800}
+                    height={950}
                     preserveAspectRatio={false}
                     zoom={true}
                     viewBox={{
                         x: [0, 2],
-                        y: [3, 22]
+                        y: [3, 53]
                     }}
                 >
                     <Coordinates.Cartesian />
