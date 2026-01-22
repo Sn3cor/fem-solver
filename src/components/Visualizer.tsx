@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Mafs, Coordinates, Line, Plot, Theme } from "mafs"
+import { Mafs, Coordinates, Line, Theme } from "mafs"
 import Solver from "../../Solver/solver"
 import "./Visualize.css"
 import type { Interval } from "../../Solver/types"
@@ -7,7 +7,7 @@ import type { Interval } from "../../Solver/types"
 const Visualizer = () => {
     const [input, setInput] = useState<string>("0")
     const [coefficients, setCoefficients] = useState<number[]>([])
-    const [h, setH] = useState(0)
+    const [_, setH] = useState(0)
     const [elements, setElements] = useState<Interval[]>([])
 
     const updatePlot = () => {
@@ -24,7 +24,7 @@ const Visualizer = () => {
         setInput(e.target.value)
     }
 
-    const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    const handleClick = () => {
         updatePlot()
     }
 
