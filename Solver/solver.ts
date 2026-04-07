@@ -92,23 +92,13 @@ export class Solver {
     public solve = () => {
         console.log(this.B)
         console.log(this.L)
-        const matrix = lusolve(this.B, this.L) as number[][]
-        const solution = matrix.map(row => row[0])
-        // const testMatrix = [
-        //     [1, 2, 4],
-        //     [3, 8, 14],
-        //     [2, 6, 13]
-        // ];
-        // const testVector = [7, 25, 21];
-        // console.log(lusolve(testMatrix, testVector))
-        // const solution = luSolve(this.B, this.L)
+        const solution = luSolve(this.B, this.L)
         return {
             solutionVector: solution,
             h: this.h,
             elements: this.elements,
             eFunctions: this.elementaryFunctions
         }
-
     }
 }
 export default Solver

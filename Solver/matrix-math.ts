@@ -3,9 +3,9 @@ import { type Matrix, type PLU, type Vector } from "./types"
 // PLU Factorization
 const luFact = (A: Matrix): PLU => {
   const n = A.length;
-  let U: Matrix = A.map(row => [...row]);
-  let L: Matrix = Array.from({ length: n }, (_, i) => Array(n).fill(0).map((_, j) => i === j ? 1 : 0));
-  let P: Matrix = Array.from({ length: n }, (_, i) => Array(n).fill(0).map((_, j) => i === j ? 1 : 0));
+  const U: Matrix = A.map(row => [...row]);
+  const L: Matrix = Array.from({ length: n }, (_, i) => Array(n).fill(0).map((_, j) => i === j ? 1 : 0));
+  const P: Matrix = Array.from({ length: n }, (_, i) => Array(n).fill(0).map((_, j) => i === j ? 1 : 0));
 
   for (let i = 0; i < n; i++) {
     let maxRow = i;
@@ -19,7 +19,7 @@ const luFact = (A: Matrix): PLU => {
     if (Math.abs(U[maxRow][i]) < 1e-12) throw new Error("Singularity")
 
     if (maxRow !== i) {
-      [A[i], A[maxRow]] = [A[maxRow], A[i]];
+      // [A[i], A[maxRow]] = [A[maxRow], A[i]];
       [U[i], U[maxRow]] = [U[maxRow], U[i]];
       [P[i], P[maxRow]] = [P[maxRow], P[i]];
 
@@ -44,7 +44,7 @@ const luFact = (A: Matrix): PLU => {
 
 const luSolve = (A: Matrix, B: Vector) => {
   const n = A.length;
-  let [P, L, U] = luFact(A);
+  const [P, L, U] = luFact(A);
   console.log(P);
   console.log(L);
   console.log(U);
