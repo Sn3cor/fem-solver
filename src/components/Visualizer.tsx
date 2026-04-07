@@ -52,9 +52,9 @@ const Visualizer = () => {
                         const x0 = element[0];
                         const x1 = element[1];
 
-                        const y0 = coefficients[i] + x0 + 3;
+                        const y0 = coefficients[i] + x0 + 1;
 
-                        const y1 = coefficients[i + 1] + x1 + 3;
+                        const y1 = coefficients[i + 1] + x1 + 1;
                         return (
                             <Line.Segment
                                 key={i}
