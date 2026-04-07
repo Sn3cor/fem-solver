@@ -19,7 +19,6 @@ const luFact = (A: Matrix): PLU => {
     if (Math.abs(U[maxRow][i]) < 1e-12) throw new Error("Singularity")
 
     if (maxRow !== i) {
-      // [A[i], A[maxRow]] = [A[maxRow], A[i]];
       [U[i], U[maxRow]] = [U[maxRow], U[i]];
       [P[i], P[maxRow]] = [P[maxRow], P[i]];
 
@@ -45,9 +44,6 @@ const luFact = (A: Matrix): PLU => {
 const luSolve = (A: Matrix, B: Vector) => {
   const n = A.length;
   const [P, L, U] = luFact(A);
-  console.log(P);
-  console.log(L);
-  console.log(U);
   const y: Vector = [...Array(n)].fill(0);
 
   // Apply P permutation matrix

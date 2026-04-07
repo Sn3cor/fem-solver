@@ -1,6 +1,5 @@
 import { quadrature } from "./gauss";
 import type { Interval, Elementary } from "./types"
-import { lusolve } from "mathjs";
 import { luSolve } from "./matrix-math";
 
 export class Solver {
