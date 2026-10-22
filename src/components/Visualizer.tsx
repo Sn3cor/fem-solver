@@ -28,13 +28,16 @@ const Visualizer = () => {
 
     return (
         <div className="visualizer">
-            <input type="number" min={0} onChange={handleInput} />
-            <input
-                type="button"
-                value="Submit"
-                onClick={handleClick}
-                disabled={Number(input) < 1 || !Number.isInteger(Number(input))}
-            />
+            <div className="controls">
+                <label htmlFor="elements-input">Number of elements:</label>
+                <input id="elements-input" type="number" min={0} onChange={handleInput} />
+                <button
+                    onClick={handleClick}
+                    disabled={Number(input) < 1 || !Number.isInteger(Number(input))}
+                >
+                    Submit
+                </button>
+            </div>
             <div className="graph">
                 <Mafs
                     height={950}

@@ -1,19 +1,21 @@
 # Finite Elements Method Solver
 
-Opis równania transportu ciepła i sformułowanie słabe znajdują się w dokumentacji PDF:
+The description of the heat transfer equation and its weak formulation can be found in the PDF documentation:
 
- **[Wyliczenia (PDF)](https://github.com/Sn3cor/fem-solver/blob/main/pdf/docs.pdf)** 
+ **[Calculations (PDF, English)](https://github.com/Sn3cor/fem-solver/blob/main/pdf/docs_en.pdf)** 
 
- **[Wizualizacja rozwiązania](https://sn3cor.github.io/fem-solver/)** 
+ **[Calculations (PDF, Polish)](https://github.com/Sn3cor/fem-solver/blob/main/pdf/docs.pdf)** 
+
+ **[Solution visualization](https://sn3cor.github.io/fem-solver/)** 
 
 
 ## Local Setup
-Sklonuj repozytorium, a następnie zainstaluj wymagane paczki:
+Clone the repository, then install the required packages:
 ```
 npm install
 ```
 
-Włącz lokalny serwer dla aplikacji:
+Start the local development server for the app:
 ```
 npm run dev
 ```
