@@ -7,14 +7,12 @@ import type { Interval } from "../../Solver/types"
 const Visualizer = () => {
     const [input, setInput] = useState<string>("0")
     const [coefficients, setCoefficients] = useState<number[]>([])
-    const [_, setH] = useState(0)
     const [elements, setElements] = useState<Interval[]>([])
 
     const updatePlot = () => {
         const solver = new Solver(Number(input))
         const { solutionVector, h, elements, eFunctions } = solver.solve()
         setCoefficients(solutionVector)
-        setH(h)
         // setEFunctions(eFunctions)
         setElements(elements)
         console.log({ solutionVector, h, elements, eFunctions })
@@ -35,7 +33,7 @@ const Visualizer = () => {
                 type="button"
                 value="Submit"
                 onClick={handleClick}
-                disabled={input <= "0"}
+                disabled={Number(input) < 1 || !Number.isInteger(Number(input))}
             />
             <div className="graph">
                 <Mafs

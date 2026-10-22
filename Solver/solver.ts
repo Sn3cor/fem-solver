@@ -1,6 +1,6 @@
 import { quadrature } from "./gauss";
-import type { Interval, Elementary } from "./types"
-import { luSolve } from "./matrix-math";
+import type { Interval, Elementary, ElementaryPart } from "./types"
+import { luSolve } from "./matrix";
 
 export class Solver {
     private n: number;
@@ -16,11 +16,11 @@ export class Solver {
         this.n = elementsNumber + 1 // n is number of nodes
         this.domain = domain
         this.h = (this.domain[1] - this.domain[0]) / (this.n - 1)
-        this.B = [...Array(this.n)].map(_ => Array(this.n).fill(0))
+        this.B = Array.from({ length: this.n }, () => Array(this.n).fill(0))
         this.L = new Array(this.n).fill(0)
         this.elements = this.initElements()
         this.k = (x: number) => x > 1 ? 2 : 1
-        this.elementaryFunctions = Array.from({ length: this.n }, () => [(_: number) => 0, (_: number) => 0]);
+        this.elementaryFunctions = Array.from({ length: this.n }, () => [() => 0, () => 0]);
 
         this.evalBMatrix()
         this.evalLMatrix()
@@ -43,9 +43,9 @@ export class Solver {
                 (x: number) => (b - x) / this.h,
                 (x: number) => (x - a) / this.h
             ]
-            const de = [
-                (_: number) => -1 / this.h,
-                (_: number) => 1 / this.h
+            const de: ElementaryPart[] = [
+                () => -1 / this.h,
+                () => 1 / this.h
             ]
             this.elementaryFunctions[idx][1] = e[0]
             this.elementaryFunctions[idx + 1][0] = e[1]
@@ -70,11 +70,11 @@ export class Solver {
 
     private evalLMatrix = (): void => {
         this.L.fill(0)
-        this.L[this.n - 1] = 0 // Dirichlet 
+        this.L[this.n - 1] = 0 // Dirichlet
         this.elements.forEach(([a, b], idx) => {
-            const de = [
-                (_: number) => -1 / this.h,
-                (_: number) => 1 / this.h
+            const de: ElementaryPart[] = [
+                () => -1 / this.h,
+                () => 1 / this.h
             ]
 
             for (let i = 0; i < 2; i++) {
@@ -89,8 +89,8 @@ export class Solver {
     }
 
     public solve = () => {
-        console.log(this.B)
-        console.log(this.L)
+        // console.log(this.B)
+        // console.log(this.L)
         const solution = luSolve(this.B, this.L)
         return {
             solutionVector: solution,

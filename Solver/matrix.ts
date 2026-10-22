@@ -28,7 +28,7 @@ const luFact = (A: Matrix): PLU => {
     }
 
     for (let j = i + 1; j < n; j++) {
-      let factor = U[j][i] / U[i][i];
+      const factor = U[j][i] / U[i][i];
       L[j][i] = factor;
 
       for (let k = i; k < n; k++) {
